@@ -8,15 +8,11 @@ Run npm index.js on the terminal to start the application and connect to port 40
 Express and mongoose
 
 # Operations
-
-
-
+| Request | Description | Endpoints
+| --- | --- | --- |
 | POST  | To create a new data entry. | '/datas'  |
-
 | GET  | To retrieve a data entry. | '/datas' |
-
-| PUT | To update a data entry. | '/datas/:id' |
-
-| DELETE | To delete a data entry. | '/datas/:id' |
+| PUT | To update a data entry with id. | '/datas/:id' |
+| DELETE | To delete a data entry with id. | '/datas/:id' |
 
 Heroku Link - https://sleepy-reef-76197.herokuapp.com/ 
