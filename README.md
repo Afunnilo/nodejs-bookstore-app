@@ -2,7 +2,7 @@
 This project is a Zuri Training task. It is a CRUD App built with node.js. It performs the create, read, update and delete methods on a certain data. The GET, POST, PUT and DELETE routes are used. The data is connected to a mongoose database where it is stored.
 
 # Usage
-Run npm index.js on the terminal to start the application and connect to port 4000 on postman
+Run node index.js on the terminal to start the application and connect to port 4000 on postman
 
 # Dependencies
 Express and mongoose
