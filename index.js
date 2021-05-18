@@ -1,11 +1,14 @@
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 4000
+const dotenv = require('dotenv');
+dotenv.config()
 app.use(express.json())
+const MongoClient = require('mongodb').MongoClient
 
 // set up mongoose
 const mongoose = require('mongoose');
-const connectionString = 'mongodb://localhost:27017/data-app'
+const connectionString = process.env.connection_string
 
 mongoose.connect(connectionString, {
     useNewUrlParser: true,
