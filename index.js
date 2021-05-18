@@ -8,7 +8,7 @@ const MongoClient = require('mongodb').MongoClient
 
 // set up mongoose
 const mongoose = require('mongoose');
-const connectionString = process.env.MONGO_URI
+const connectionString = process.env.connection_string
 
 mongoose.connect(connectionString, {
     useNewUrlParser: true,
