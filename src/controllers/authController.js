@@ -1,13 +1,11 @@
 const User = require("../models/user");
-const bcryptjs = require('bcryptjs');
-const jwt = require('jsonwebtoken');   
-const secret = "verySecureSECRET";
-const expiry = 3600;
+const bcrypt = require('bcryptjs');
+const { createToken} = require('../services/jwtservice')
 
 exports.registerNewUser = (req, res) => {
     // fetch user details from req.body
     // check if user with this username exists
-    User.findOne({username : req.body.usernmae}, (err, existingUser)  => {
+    User.findOne({username : req.body.username}, (err, existingUser)  => {
         if (err){
             return res.status(500).json({err})
         } 
@@ -24,11 +22,11 @@ exports.registerNewUser = (req, res) => {
                 return res.status(500).json({err})
             }
             // hash users password
-            bcyrpt.genSalt(10, (err, salt) => {
+            bcrypt.genSalt(10, (err, salt) => {
                 if (err) {
                     return res.status(500).json({ err })
                 }
-                bcryptjs.hash(req.body.password, salt, (err, hashedPassword) => {
+                bcrypt.hash(req.body.password, salt, (err, hashedPassword) => {
                     if (err) {
                         return res.status(500).json({err})
                     }
@@ -39,25 +37,40 @@ exports.registerNewUser = (req, res) => {
                             return res.status(500).json({ err })
                         }
                         // create jwt for user
-                        jwt.sign(
-                            {
-                                id: newUser._id,
-                                username: newUser.username,
-                                firstName: newUser.firstName,
-                                lastName: newUser.lastName
-
-                            }, secret, {expiresIn: expiry}
-                        )
-                        // send token to user
-
-                    })
+                        let  token = createToken(newUser)
+                        if (!token) {
+                            return res.status(500).json({message : 'sorry, we could not authenticate you.'})
+                        }
+                                // send token to user
+                                return res.status(200).json({ message : "User registration sucessful", token})
+                         })
+                   })
                 })
             })
-        })
-    })
+        })   
+}
+
+exports.loginUser = (req, res) => {
+    // check if user exists
+    User.findOne({ username: req.body.username}, (err, foundUser) => {
+        if (err) {
+            return res.status(500).json({ err })
+        }
+        if(!foundUser) {
+            return res.status(401).json({ message: 'incorrect username' })
+        } 
+        // check if password is correct
+       let match =  bcrypt.compareSync(req.body.password, foundUser.password) 
+       if (!match){
+           return res.status(401).json({message: 'incorrect password'})
+       }
+       // create a token and send to user
+       let  token = createToken(foundUser)
+       if (!token) {
+           return res.status(500).json({message : 'sorry, we could not authenticate you. Please log in.'})
+       }
+          return res.status(200).json({message : 'user logged in', token})
+       })
+
     
-    // hash password
-    // save password to db
-    // create jwt for user
-    // send token to user   
 }
